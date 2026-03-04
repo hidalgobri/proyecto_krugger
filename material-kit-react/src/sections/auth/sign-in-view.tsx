@@ -1,4 +1,6 @@
+import { gql } from 'graphql-tag';
 import { useState, useCallback } from 'react';
+import { useMutation } from '@apollo/client/react';
 
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
@@ -11,18 +13,42 @@ import InputAdornment from '@mui/material/InputAdornment';
 
 import { useRouter } from 'src/routes/hooks';
 
-import { Iconify } from 'src/components/iconify';
+import { LoginMutationData, LoginMutationVars } from 'src/graphql/types/LoginGraphType';
 
+import { Iconify } from 'src/components/iconify';
 // ----------------------------------------------------------------------
+const LOGIN_MUTATION = gql`
+  mutation Login($username: String!, $password: String!) {
+    login(username: $username, password: $password) {
+      token
+    }
+  }
+`;
+
 
 export function SignInView() {
   const router = useRouter();
-
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleSignIn = useCallback(() => {
-    router.push('/dashboard');
-  }, [router]);
+  const handleSignIn = () => {
+      login({ variables: {username, password}});
+      console.log("aquiii vale");
+      console.log(username)
+      console.log(password)
+  };
+
+  const [login, { loading }] = useMutation<LoginMutationData,LoginMutationVars>(LOGIN_MUTATION, {
+      onCompleted: (data) => {
+        localStorage.setItem('token', data.login.token);
+        router.push('/dashboard');
+      },
+      onError: (e) => {
+        setError('Error: ' + e.message);
+      }
+    });
 
   const renderForm = (
     <Box
@@ -35,23 +61,26 @@ export function SignInView() {
       <TextField
         fullWidth
         name="email"
-        label="Email address"
-        defaultValue="hello@gmail.com"
+        label="Usuario"
+        value={username}
+        onChange={(e) => {setUsername(e.target.value)}}
         sx={{ mb: 3 }}
         slotProps={{
           inputLabel: { shrink: true },
         }}
+
       />
 
       <Link variant="body2" color="inherit" sx={{ mb: 1.5 }}>
-        Forgot password?
+        ¿Olvidaste tu contraseña?
       </Link>
 
       <TextField
         fullWidth
         name="password"
-        label="Password"
-        defaultValue="@demo1234"
+        label="Contraseña"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
         type={showPassword ? 'text' : 'password'}
         slotProps={{
           inputLabel: { shrink: true },
@@ -66,6 +95,7 @@ export function SignInView() {
           },
         }}
         sx={{ mb: 3 }}
+
       />
 
       <Button
@@ -106,8 +136,6 @@ export function SignInView() {
         </Typography>
       </Box>
       {renderForm}
-
-
     </>
   );
 }
