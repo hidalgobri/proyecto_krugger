@@ -35,12 +35,13 @@ export const navData = [
     path: '/blog',
     icon: icon('ic-glass-buy'),
   },
-/*
+
   {
     title: 'Sign in',
     path: '/sign-in',
     icon: icon('ic-lock'),
   },
+/*
   {
     title: 'Not found',
     path: '/404',

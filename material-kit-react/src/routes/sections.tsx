@@ -7,6 +7,8 @@ import { varAlpha } from 'minimal-shared/utils';
 import Box from '@mui/material/Box';
 import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
 
+import ProtectedRoute from 'src/routes/protected-route';
+
 import { AuthLayout } from 'src/layouts/auth';
 import { DashboardLayout } from 'src/layouts/dashboard';
 
@@ -49,11 +51,19 @@ export const routesSection: RouteObject[] = [
       </DashboardLayout>
     ),
     children: [
-      { index: true, element: <DashboardPage /> },
       { path: 'user', element: <UserPage /> },
       { path: 'products', element: <ProductsPage /> },
       { path: 'blog', element: <BlogPage /> },
+      { path: 'dashboard', element: (
+                                        <ProtectedRoute>
+                                            <DashboardPage/>
+                                        </ProtectedRoute>
+                                    )
+          }
     ],
+  },
+  {
+      index: true, element: <SignInPage/>
   },
   {
     path: 'sign-in',
