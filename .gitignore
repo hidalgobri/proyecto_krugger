@@ -29,3 +29,6 @@ Thumbs.db
 # Carpetas temporales
 tmp/
 temp/
+
+
+node_modules/
