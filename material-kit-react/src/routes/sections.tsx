@@ -20,6 +20,7 @@ export const UserPage = lazy(() => import('src/pages/user'));
 export const SignInPage = lazy(() => import('src/pages/sign-in'));
 export const ProductsPage = lazy(() => import('src/pages/products'));
 export const Page404 = lazy(() => import('src/pages/page-not-found'));
+export const RegisterPage = lazy(() => import('src/pages/register'));
 
 const renderFallback = () => (
   <Box
@@ -51,19 +52,16 @@ export const routesSection: RouteObject[] = [
       </DashboardLayout>
     ),
     children: [
+      { index: true, element: (
+                                    <ProtectedRoute>
+                                        <DashboardPage/>
+                                    </ProtectedRoute>
+                                )},
       { path: 'user', element: <UserPage /> },
       { path: 'products', element: <ProductsPage /> },
-      { path: 'blog', element: <BlogPage /> },
-      { path: 'dashboard', element: (
-                                        <ProtectedRoute>
-                                            <DashboardPage/>
-                                        </ProtectedRoute>
-                                    )
-          }
+      { path: 'dashboard', element: <DashboardPage/> },
+      { path: 'blog', element: <BlogPage /> }
     ],
-  },
-  {
-      index: true, element: <SignInPage/>
   },
   {
     path: 'sign-in',
@@ -72,6 +70,12 @@ export const routesSection: RouteObject[] = [
         <SignInPage />
       </AuthLayout>
     ),
+  },
+  { path: 'register', element: (
+                                    <AuthLayout>
+                                        <RegisterPage />
+                                    </AuthLayout>
+                                )
   },
   {
     path: '404',

@@ -14,34 +14,33 @@ import InputAdornment from '@mui/material/InputAdornment';
 
 import { useRouter } from 'src/routes/hooks';
 
-import { LoginMutationData, LoginMutationVars } from 'src/graphql/types/LoginGraphType';
+import { RegisterMutationData, RegisterMutationVars } from 'src/graphql/types/RegisterGraphType';
 
 import { Iconify } from 'src/components/iconify';
 // ----------------------------------------------------------------------
-const LOGIN_MUTATION = gql`
-  mutation Login($username: String!, $password: String!) {
-    login(username: $username, password: $password) {
-      token
-    }
+const REGISTER_MUTATION = gql`
+  mutation Register($username: String!, $password: String!) {
+    register(username: $username, password: $password)
   }
 `;
 
 
-export function SignInView() {
+export function RegisterView() {
   const router = useRouter();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleSignIn = () => {
-      login({ variables: {username, password}});
+  const handleRegister = () => {
+      register({ variables: {username, password}});
   };
 
-  const [login, { loading }] = useMutation<LoginMutationData,LoginMutationVars>(LOGIN_MUTATION, {
+  const [register, { loading }] = useMutation<RegisterMutationData,RegisterMutationVars>(REGISTER_MUTATION, {
       onCompleted: (data) => {
-        localStorage.setItem('token', data.login.token);
-        router.push('/dashboard');
+         setTimeout(() => {
+                router.push('/sign-in');
+         }, 2000);
       },
       onError: (e) => {
         setError('Error: ' + e.message);
@@ -98,9 +97,9 @@ export function SignInView() {
         type="submit"
         color="inherit"
         variant="contained"
-        onClick={handleSignIn}
+        onClick={handleRegister}
       >
-        Iniciar sesión
+        Registrarse
       </Button>
     </Box>
   );
@@ -116,17 +115,18 @@ export function SignInView() {
           mb: 5,
         }}
       >
-        <Typography variant="h5">Iniciar sesión</Typography>
-        <Typography
+        <Typography variant="h5">Registrarse</Typography>
+       <Typography
           variant="body2"
           sx={{
             color: 'text.secondary',
           }}
         >
-          <Link component={RouterLink as any} variant="subtitle2" sx={{ ml: 0.5 }} to="/register">
-            Registrarse
-          </Link>
+            <Link component={RouterLink as any} variant="subtitle2" sx={{ ml: 0.5 }} to="/sign-in">Iniciar sesión</Link>
         </Typography>
+
+
+
       </Box>
       {renderForm}
     </>

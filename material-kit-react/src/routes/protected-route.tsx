@@ -6,6 +6,7 @@ interface ProtectedRouteProps {
 }
 
 export default function ProtectedRoute({ children }: ProtectedRouteProps) {
+
   const isAuthenticated: boolean = !!localStorage.getItem('token');
 
   if (!isAuthenticated) {
