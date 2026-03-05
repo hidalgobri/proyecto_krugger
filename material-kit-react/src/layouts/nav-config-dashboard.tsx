@@ -14,34 +14,34 @@ export type NavItem = {
 
 export const navData = [
   {
-    title: 'Home',
+    title: 'Inicio',
     path: '/',
     icon: icon('ic-home'),
   },
   {
-    title: 'User',
+    title: 'Usuarios',
     path: '/user',
     icon: icon('ic-user'),
   },
   {
-    title: 'Product',
+    title: 'Productos',
     path: '/products',
     icon: icon('ic-cart'),
 
   },
 
   {
-    title: 'Blog',
+    title: 'Ordenes',
     path: '/blog',
     icon: icon('ic-glass-buy'),
   },
-
+/*
   {
     title: 'Sign in',
     path: '/sign-in',
     icon: icon('ic-lock'),
   },
-/*
+
   {
     title: 'Not found',
     path: '/404',
