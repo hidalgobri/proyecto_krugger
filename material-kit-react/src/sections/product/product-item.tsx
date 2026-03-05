@@ -18,8 +18,8 @@ import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
 import { ColorPreview } from 'src/components/color-utils';
 
+import { ProductRegister } from './product-register'
 import { ProductInterface } from '../../interfaces/interface'
-
 // ----------------------------------------------------------------------
 const DELETE_PRODUCT = gql`
   mutation DeleteProduct($id: ID!) {
@@ -30,6 +30,7 @@ const DELETE_PRODUCT = gql`
 type Props = {
     product: ProductInterface;
     onDeleted: () => void;
+
 };
 
 export function ProductItem({ product, onDeleted }: Props) {
@@ -37,6 +38,8 @@ export function ProductItem({ product, onDeleted }: Props) {
     const [deleteProduct] = useMutation(DELETE_PRODUCT);
 
     const [openPopover, setOpenPopover] = useState<HTMLButtonElement | null>(null);
+
+    const [anchorElEdit, setAnchorElEdit] = useState<HTMLLIElement | null>(null);
 
     const handleOpenPopover = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
       setOpenPopover(event.currentTarget);
@@ -46,9 +49,15 @@ export function ProductItem({ product, onDeleted }: Props) {
       setOpenPopover(null);
     }, []);
 
-    const handleEditButton = () => {
+    const handleCloseEditPopover = useCallback(() => {
+      setAnchorElEdit(null);
+    }, []);
 
-    }
+    const handleEditButton = useCallback((event: React.MouseEvent<HTMLLIElement>) => {
+        setAnchorElEdit(event.currentTarget);
+
+    }, []);
+
     const handleDeleteButton = async () => {
         console.log("producto a eliminar");
         console.log(product.id);
@@ -129,10 +138,15 @@ export function ProductItem({ product, onDeleted }: Props) {
               },
             }}
           >
-            <MenuItem onClick={handleClosePopover}>
+            <MenuItem onClick={handleEditButton}>
               <Iconify icon="solar:pen-bold" />
               Editar
             </MenuItem>
+            {Boolean(anchorElEdit) && <ProductRegister open={Boolean(anchorElEdit)}
+                                                                     idProduct={product.id}
+                                                                     anchorEl={anchorElEdit}
+                                                                     onClose={handleCloseEditPopover}
+                                                                     onSuccess={()=>{console.log("eixto")}}/>}
 
             <MenuItem onClick={handleDeleteButton} sx={{ color: 'error.main' }}>
               <Iconify icon="solar:trash-bin-trash-bold" />

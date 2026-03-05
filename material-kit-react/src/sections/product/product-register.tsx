@@ -1,6 +1,6 @@
-import { useState } from 'react';
 import { gql } from 'graphql-tag';
-import { useMutation } from '@apollo/client/react';
+import { useState, useEffect } from 'react';
+import { useQuery, useMutation } from '@apollo/client/react';
 
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -8,8 +8,10 @@ import Popover from '@mui/material/Popover';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
+import {OneProductMutationData,OneProductMutationVars } from '../../graphql/types/ProductGraphType'
+
 const CREATE_PRODUCT = gql`
-  mutation CreateProduct($input: CreateProductInput!) {
+  mutation CreateProduct($input: ProductInput!) {
     createProduct(input: $input) {
       id
       name
@@ -19,21 +21,46 @@ const CREATE_PRODUCT = gql`
   }
 `;
 
+const GET_PRODUCT = gql`
+    query Product($id: ID!) {
+        product(id: $id) {
+            id
+            name
+            description
+            price
+        }
+    }
+`;
+
 interface Props {
   open: boolean;
+  idProduct: string| null;
   anchorEl: HTMLElement | null;
   onClose: () => void;
   onSuccess: () => void;
 }
 
-export function ProductRegister({ open, anchorEl, onClose, onSuccess }: Props) {
+export function ProductRegister({ open, idProduct,anchorEl, onClose, onSuccess }: Props) {
+
+  const { loading, error, data, refetch } = useQuery<OneProductMutationData,OneProductMutationVars>(GET_PRODUCT, { variables: {id: idProduct!},skip: !idProduct} );
+
+    useEffect(() => {
+      if (data?.product) {
+        setForm({
+          name: data.product.name ?? '',
+          description: data.product.description ?? '',
+          price: String(data.product.price ?? ''),
+        });
+      }
+    }, [data]);
+
   const [form, setForm] = useState({
     name: '',
     description: '',
     price: '',
   });
 
-  const [createProduct, { loading }] = useMutation(CREATE_PRODUCT);
+  const [createProduct] = useMutation(CREATE_PRODUCT);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({
@@ -43,24 +70,36 @@ export function ProductRegister({ open, anchorEl, onClose, onSuccess }: Props) {
   };
 
   const handleSubmit = async () => {
-    try {
-      await createProduct({
-        variables: {
-          input: {
-            name: form.name,
-            description: form.description,
-            price: parseFloat(form.price),
-          },
-        },
-      });
+      if(!idProduct)
+      {
+            console.log("product vacio, crea producto");
+            try {
+              await createProduct({
+                variables: {
+                  input: {
+                    name: form.name,
+                    description: form.description,
+                    price: parseFloat(form.price),
+                  },
+                },
+              });
 
-      onSuccess(); // refresca lista
-      onClose();   // cierra popover
+              onSuccess(); // refresca lista
+              onClose();   // cierra popover
 
-      setForm({ name: '', description: '', price: '' });
-    } catch (error) {
-      console.error(error);
-    }
+              setForm({ name: '', description: '', price: '' });
+
+          }catch (ex) {
+            console.error(ex);
+          }
+      }
+
+      else
+      {
+        refetch();
+        console.log("product lleno, editar producto");
+      }
+
   };
 
   return (
@@ -75,7 +114,7 @@ export function ProductRegister({ open, anchorEl, onClose, onSuccess }: Props) {
     >
       <Box sx={{ p: 3, width: 300 }}>
         <Typography variant="h6" sx={{ mb: 2 }}>
-          Registrar Producto
+          {idProduct? 'Editar Producto' :'Registrar Producto'}
         </Typography>
 
         <TextField
@@ -110,7 +149,7 @@ export function ProductRegister({ open, anchorEl, onClose, onSuccess }: Props) {
           fullWidth
           variant="contained"
           onClick={handleSubmit}
-          disabled={loading}
+
         >
           Guardar
         </Button>
