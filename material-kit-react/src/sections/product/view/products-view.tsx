@@ -16,6 +16,7 @@ import { ProductItem } from '../product-item';
 import { ProductSort } from '../product-sort';
 import { CartIcon } from '../product-cart-widget';
 import { ProductFilters } from '../product-filters';
+import { ProductRegister } from '../product-register'
 import { ProductInterface } from '../../../interfaces/interface'
 import { ProductsMutationData } from '../../../graphql/types/ProductGraphType'
 
@@ -45,12 +46,14 @@ export function ProductsView() {
 
   const [openFilter, setOpenFilter] = useState(false);
 
+  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+
   const handleOpenPopover = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
-    setOpenPopover(event.currentTarget);
+    setAnchorEl(event.currentTarget);
   }, []);
 
   const handleClosePopover = useCallback(() => {
-    setOpenPopover(null);
+    setAnchorEl(null);
   }, []);
 
   const handleOpenFilter = useCallback(() => {
@@ -69,6 +72,8 @@ export function ProductsView() {
     refetch();
   }
 
+  const openRegister = Boolean(anchorEl);
+
   return (
     <DashboardContent>
     <Box
@@ -85,9 +90,14 @@ export function ProductsView() {
         variant="contained"
         color="inherit"
         startIcon={<Iconify icon="mingcute:add-line" />}
+        onClick={handleOpenPopover}
       >
         Nuevo producto
       </Button>
+      <ProductRegister open={openRegister}
+                         anchorEl={anchorEl}
+                         onClose={handleClosePopover}
+                         onSuccess={refetch}/>
     </Box>
 
       <Grid container spacing={3}>
