@@ -1,17 +1,20 @@
+import { gql } from 'graphql-tag';
 import { useState, useCallback } from 'react';
+import { useQuery, useMutation } from '@apollo/client/react';
 
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Pagination from '@mui/material/Pagination';
 import Typography from '@mui/material/Typography';
 
-import { _products } from 'src/_mock';
 import { DashboardContent } from 'src/layouts/dashboard';
 
 import { ProductItem } from '../product-item';
 import { ProductSort } from '../product-sort';
 import { CartIcon } from '../product-cart-widget';
 import { ProductFilters } from '../product-filters';
+import { ProductInterface } from '../../../interfaces/interface'
+import { ProductsMutationData } from '../../../graphql/types/ProductGraphType'
 
 import type { FiltersProps } from '../product-filters';
 
@@ -57,7 +60,20 @@ const defaultFilters = {
   category: CATEGORY_OPTIONS[0].value,
 };
 
+const GET_PRODUCTS = gql`
+  query GetProducts {
+    products {
+      id
+      name
+      description
+      price
+    }
+  }
+`;
+
 export function ProductsView() {
+  const { loading, error, data, refetch } = useQuery<ProductsMutationData>(GET_PRODUCTS);
+
   const [sortBy, setSortBy] = useState('featured');
 
   const [openFilter, setOpenFilter] = useState(false);
@@ -89,7 +105,7 @@ export function ProductsView() {
       <CartIcon totalItems={8} />
 
       <Typography variant="h4" sx={{ mb: 5 }}>
-        Products
+        Productos
       </Typography>
       <Box
         sx={{
@@ -139,7 +155,7 @@ export function ProductsView() {
       </Box>
 
       <Grid container spacing={3}>
-        {_products.map((product) => (
+        {data?.products.map((product: ProductInterface) => (
           <Grid key={product.id} size={{ xs: 12, sm: 6, md: 3 }}>
             <ProductItem product={product} />
           </Grid>
