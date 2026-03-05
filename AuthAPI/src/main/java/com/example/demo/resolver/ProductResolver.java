@@ -55,6 +55,7 @@ public class ProductResolver {
     @MutationMapping
     @PreAuthorize("isAuthenticated()")
     public Boolean deleteProduct(@Argument Long id) {
+
         return productService.deleteProduct(id);
-    }
+       }
 }
