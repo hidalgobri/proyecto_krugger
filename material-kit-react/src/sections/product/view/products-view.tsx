@@ -35,6 +35,8 @@ const GET_PRODUCTS = gql`
 `;
 
 export function ProductsView() {
+
+    console.log("entro en vista");
   const { loading, error, data, refetch } = useQuery<ProductsMutationData>(GET_PRODUCTS);
 
   const [openPopover, setOpenPopover] = useState<HTMLButtonElement | null>(null);
@@ -63,6 +65,9 @@ export function ProductsView() {
     setSortBy(newSort);
   }, []);
 
+  const handleProductItemDeleted = () =>{
+    refetch();
+  }
 
   return (
     <DashboardContent>
@@ -88,7 +93,7 @@ export function ProductsView() {
       <Grid container spacing={3}>
         {data?.products.map((product: ProductInterface) => (
           <Grid key={product.id} size={{ xs: 12, sm: 6, md: 3 }}>
-            <ProductItem product={product} />
+            <ProductItem product={product} onDeleted={handleProductItemDeleted} />
           </Grid>
 
         ))}

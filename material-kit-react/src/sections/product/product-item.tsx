@@ -27,7 +27,12 @@ const DELETE_PRODUCT = gql`
   }
 `;
 
-export function ProductItem({ product }: { product: ProductInterface }) {
+type Props = {
+    product: ProductInterface;
+    onDeleted: () => void;
+};
+
+export function ProductItem({ product, onDeleted }: Props) {
 
     const [deleteProduct] = useMutation(DELETE_PRODUCT);
 
@@ -35,22 +40,31 @@ export function ProductItem({ product }: { product: ProductInterface }) {
 
     const handleOpenPopover = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
       setOpenPopover(event.currentTarget);
-      handleDelete(product.id);
     }, []);
 
     const handleClosePopover = useCallback(() => {
       setOpenPopover(null);
     }, []);
 
-  const handleDelete = async (id: string) => {
-    if (window.confirm('¿Seguro de eliminar el producto?')) {
-      try {
-        await deleteProduct({ variables: { id } });
-      } catch (err) {
-        console.error('Error deleting product:', err);
-      }
+    const handleEditButton = () => {
+
     }
-  };
+    const handleDeleteButton = async () => {
+        console.log("producto a eliminar");
+        console.log(product.id);
+        const id = product.id;
+
+        if (window.confirm('¿Seguro de eliminar el producto?')) {
+              try {
+                await deleteProduct({ variables: { id} });
+                handleClosePopover();
+                onDeleted();
+
+              } catch (err) {
+                console.error('Error deleting product:', err);
+              }
+        }
+    }
 
   const renderImg = (
     <Box
@@ -120,7 +134,7 @@ export function ProductItem({ product }: { product: ProductInterface }) {
               Editar
             </MenuItem>
 
-            <MenuItem onClick={handleClosePopover} sx={{ color: 'error.main' }}>
+            <MenuItem onClick={handleDeleteButton} sx={{ color: 'error.main' }}>
               <Iconify icon="solar:trash-bin-trash-bold" />
               Eliminar
             </MenuItem>
