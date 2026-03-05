@@ -32,6 +32,17 @@ const GET_PRODUCT = gql`
     }
 `;
 
+const UPDATE_PRODUCT = gql`
+  mutation UpdateProduct($id: ID!, $input: ProductInput!) {
+    updateProduct(id: $id, input: $input) {
+      id
+      name
+      description
+      price
+    }
+  }
+`;
+
 interface Props {
   open: boolean;
   idProduct: string| null;
@@ -43,16 +54,7 @@ interface Props {
 export function ProductRegister({ open, idProduct,anchorEl, onClose, onSuccess }: Props) {
 
   const { loading, error, data, refetch } = useQuery<OneProductMutationData,OneProductMutationVars>(GET_PRODUCT, { variables: {id: idProduct!},skip: !idProduct} );
-
-    useEffect(() => {
-      if (data?.product) {
-        setForm({
-          name: data.product.name ?? '',
-          description: data.product.description ?? '',
-          price: String(data.product.price ?? ''),
-        });
-      }
-    }, [data]);
+  const [updateProduct] = useMutation(UPDATE_PRODUCT);
 
   const [form, setForm] = useState({
     name: '',
@@ -61,6 +63,16 @@ export function ProductRegister({ open, idProduct,anchorEl, onClose, onSuccess }
   });
 
   const [createProduct] = useMutation(CREATE_PRODUCT);
+
+  useEffect(() => {
+      if (data?.product) {
+        setForm({
+          name: data.product.name ?? '',
+          description: data.product.description ?? '',
+          price: String(data.product.price ?? ''),
+        });
+      }
+  }, [data]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({
@@ -84,21 +96,34 @@ export function ProductRegister({ open, idProduct,anchorEl, onClose, onSuccess }
                 },
               });
 
-              onSuccess(); // refresca lista
-              onClose();   // cierra popover
-
-              setForm({ name: '', description: '', price: '' });
-
           }catch (ex) {
             console.error(ex);
           }
       }
-
       else
       {
-        refetch();
-        console.log("product lleno, editar producto");
+          try
+          {
+              await updateProduct({
+                        variables: {
+                          id: idProduct,
+                          input: {
+                            name: form.name,
+                            description: form.description,
+                            price: parseFloat(form.price.toString())
+                          }
+                        }
+                      });
+          }
+          catch(e)
+          {
+             console.error('Error updating product:', e);
+          }
       }
+        onSuccess(); // refresca lista
+        onClose();   // cierra popover
+
+        setForm({ name: '', description: '', price: '' });
 
   };
 
