@@ -31,8 +31,8 @@ export const navData = [
   },
 
   {
-    title: 'Ordenes',
-    path: '/blog',
+    title: 'Crear orden',
+    path: '/orders',
     icon: icon('ic-glass-buy'),
   },
 /*
