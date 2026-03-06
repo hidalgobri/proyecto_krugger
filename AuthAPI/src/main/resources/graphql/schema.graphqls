@@ -2,7 +2,7 @@ type Query {
     products: [Product!]!
     product(id: ID!): Product
 
-    ordersAll: [Order!]!
+    ordersAll: [Order]
     orderById(id: ID!): Order
     ordersByUser(username: String!): [Order!]!
 }
@@ -28,6 +28,7 @@ type Product {
 type Order{
     id: ID!
     items: [OrderItem!]!
+    user: User
 }
 
 type OrderItem{
@@ -52,4 +53,9 @@ input ProductInput {
 
 type LoginResponse {
     token: String!
+}
+
+type User {
+    id: ID
+    username: String
 }

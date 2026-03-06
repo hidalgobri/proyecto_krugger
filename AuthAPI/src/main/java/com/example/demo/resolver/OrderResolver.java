@@ -26,7 +26,7 @@ public class OrderResolver{
 
     @QueryMapping
     @PreAuthorize("isAuthenticated()")
-    public List<Order> orders() {
+    public List<Order> ordersAll() {
         return orderService.getAllOrders();
     }
 
