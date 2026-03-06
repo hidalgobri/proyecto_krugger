@@ -126,9 +126,11 @@ export function ProductItem({ product, onDeleted, showCounter, cart }: Props) {
           }}
         >
           {renderPrice}
+          {!showCounter &&
           <IconButton onClick={handleOpenPopover}>
                         <Iconify icon="eva:more-vertical-fill" />
           </IconButton>
+          }
 
         <Popover
           open={!!openPopover}
