@@ -10,7 +10,7 @@ export function OverviewAnalyticsView() {
   return (
     <DashboardContent maxWidth="xl">
       <Typography variant="h4" >
-        Hi, Welcome back 👋
+        Hola, bienvenido 👋
       </Typography>
 
     </DashboardContent>

@@ -18,11 +18,11 @@ export const navData = [
     path: '/',
     icon: icon('ic-home'),
   },
-  {
+  /*{
     title: 'Usuarios',
     path: '/user',
     icon: icon('ic-user'),
-  },
+  },*/
   {
     title: 'Productos',
     path: '/products',
@@ -34,6 +34,11 @@ export const navData = [
     title: 'Crear orden',
     path: '/orders',
     icon: icon('ic-glass-buy'),
+  },
+  {
+    title: 'Consultar órdenes',
+    path: '/show-orders',
+    icon: icon('ic-search'),
   },
 /*
   {

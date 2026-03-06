@@ -16,3 +16,27 @@ export interface OrderProductItem {
   product: ProductInterface;
 }
 
+export interface Product {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+}
+
+export interface OrderItem {
+  id: string;
+  quantity: number;
+  product: Product;
+}
+
+export interface User {
+  id: string;
+  username: string;
+}
+
+export interface Order {
+  id: string;
+  items: OrderItem[];
+  user: User;
+}
+
