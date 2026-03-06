@@ -12,11 +12,11 @@ import { DashboardContent } from 'src/layouts/dashboard';
 
 import { Iconify } from 'src/components/iconify';
 
-import { ProductItem } from '../product-item';
 import { ProductSort } from '../product-sort';
 import { ProductGrid } from '../product-grid';
 import { CartIcon } from '../product-cart-widget';
 import { ProductFilters } from '../product-filters';
+import { ProductItem } from '../product-order-item';
 import { ProductRegister } from '../product-register'
 import { ProductInterface } from '../../../interfaces/interface'
 import { ProductsMutationData } from '../../../graphql/types/ProductGraphType'
@@ -103,7 +103,7 @@ export function ProductsView() {
       <Grid container spacing={3}>
         {data?.products.map((product: ProductInterface) => (
           <Grid key={product.id} size={{ xs: 12, sm: 6, md: 3 }}>
-            <ProductItem product={product} onDeleted={handleProductItemDeleted} />
+            <ProductItem product={product} onDeleted={handleProductItemDeleted} showCounter={false} />
           </Grid>
 
         ))}

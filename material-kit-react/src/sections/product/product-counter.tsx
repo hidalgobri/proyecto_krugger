@@ -1,17 +1,25 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { Box, Button, Typography } from "@mui/material";
 
-export default function ProductCounter() {
+type CounterProps = {
+    onChange: (value: number) => void;
+}
+
+export default function ProductCounter( {onChange} : CounterProps ) {
   const [count, setCount] = useState(0);
 
+    useEffect(() => {
+      onChange(count);
+    }, [count]);
+
   const increase = () => {
-    setCount(count + 1);
+    setCount((c) => c+1);
   };
 
   const decrease = () => {
     if (count > 0) {
-      setCount(count - 1);
+      setCount((c) => c-1);
     }
   };
 

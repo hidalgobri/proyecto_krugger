@@ -84,7 +84,6 @@ export function ProductRegister({ open, idProduct,anchorEl, onClose, onSuccess }
   const handleSubmit = async () => {
       if(!idProduct)
       {
-            console.log("product vacio, crea producto");
             try {
               await createProduct({
                 variables: {

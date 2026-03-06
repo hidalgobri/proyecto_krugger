@@ -20,7 +20,8 @@ import { ColorPreview } from 'src/components/color-utils';
 
 import ProductCounter from './product-counter'
 import { ProductRegister } from './product-register'
-import { ProductInterface } from '../../interfaces/interface'
+import { ProductInterface,OrderProductItem } from '../../interfaces/interface'
+
 // ----------------------------------------------------------------------
 const DELETE_PRODUCT = gql`
   mutation DeleteProduct($id: ID!) {
@@ -31,16 +32,28 @@ const DELETE_PRODUCT = gql`
 type Props = {
     product: ProductInterface;
     onDeleted: () => void;
-
+    showCounter: boolean;
+    cart?: (order: OrderProductItem) => void;
 };
 
-export function ProductItem({ product, onDeleted }: Props) {
+export function ProductItem({ product, onDeleted, showCounter, cart }: Props) {
 
     const [deleteProduct] = useMutation(DELETE_PRODUCT);
 
     const [openPopover, setOpenPopover] = useState<HTMLButtonElement | null>(null);
 
     const [anchorElEdit, setAnchorElEdit] = useState<HTMLLIElement | null>(null);
+
+    const handleCounterChange = (value:number)=>{
+
+        const order: OrderProductItem = {
+          id: null,
+          quantity: value,
+          product: product
+        };
+
+        cart?.(order);
+    }
 
     const handleOpenPopover = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
       setOpenPopover(event.currentTarget);
@@ -164,7 +177,7 @@ export function ProductItem({ product, onDeleted }: Props) {
             justifyContent: 'space-between',
           }}
         >
-        <ProductCounter/>
+        {showCounter && <ProductCounter onChange={handleCounterChange}/>}
         </Box>
       </Stack>
     </Card>
