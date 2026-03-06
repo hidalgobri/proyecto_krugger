@@ -18,6 +18,7 @@ import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
 import { ColorPreview } from 'src/components/color-utils';
 
+import ProductCounter from './product-counter'
 import { ProductRegister } from './product-register'
 import { ProductInterface } from '../../interfaces/interface'
 // ----------------------------------------------------------------------
@@ -115,6 +116,7 @@ export function ProductItem({ product, onDeleted }: Props) {
           <IconButton onClick={handleOpenPopover}>
                         <Iconify icon="eva:more-vertical-fill" />
           </IconButton>
+
         <Popover
           open={!!openPopover}
           anchorEl={openPopover}
@@ -154,6 +156,15 @@ export function ProductItem({ product, onDeleted }: Props) {
             </MenuItem>
           </MenuList>
         </Popover>
+        </Box>
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}
+        >
+        <ProductCounter/>
         </Box>
       </Stack>
     </Card>

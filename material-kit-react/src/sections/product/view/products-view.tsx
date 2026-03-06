@@ -14,6 +14,7 @@ import { Iconify } from 'src/components/iconify';
 
 import { ProductItem } from '../product-item';
 import { ProductSort } from '../product-sort';
+import { ProductGrid } from '../product-grid';
 import { CartIcon } from '../product-cart-widget';
 import { ProductFilters } from '../product-filters';
 import { ProductRegister } from '../product-register'
@@ -21,6 +22,7 @@ import { ProductInterface } from '../../../interfaces/interface'
 import { ProductsMutationData } from '../../../graphql/types/ProductGraphType'
 
 import type { FiltersProps } from '../product-filters';
+
 
 // ----------------------------------------------------------------------
 
@@ -107,7 +109,6 @@ export function ProductsView() {
         ))}
       </Grid>
 
-      <Pagination count={10} color="primary" sx={{ mt: 8, mx: 'auto' }} />
     </DashboardContent>
   );
 }
